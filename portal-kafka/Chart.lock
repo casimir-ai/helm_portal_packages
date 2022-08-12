@@ -1,0 +1,12 @@
+dependencies:
+- name: zookeeper
+  repository: https://charts.bitnami.com/bitnami
+  version: 9.1.1
+- name: kafka
+  repository: https://charts.bitnami.com/bitnami
+  version: 16.2.7
+- name: kafka-ui
+  repository: https://provectus.github.io/kafka-ui
+  version: v0.4.0
+digest: sha256:9d7a5697a0df521e45f69e453d60f515b6f6150cd39b512270831132c6d0bea1
+generated: "2022-08-03T20:18:08.3905293+02:00"

@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "casimir-backend.fullname" . }}
+  namespace: {{ .Values.namespace}}
+  labels:
+    {{- include "casimir-backend.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.envs.PORT }}
+      targetPort: {{ .Values.envs.PORT }}
+      protocol: TCP
+      name: http-port
+    - port: {{ .Values.envs.WS_PORT }}
+      targetPort: {{ .Values.envs.WS_PORT }}
+      protocol: TCP
+      name: ws-port
+  selector:
+    {{- include "casimir-backend.selectorLabels" . | nindent 4 }}
+
+
+    

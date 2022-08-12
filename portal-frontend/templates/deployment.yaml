@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "portal-frontend.fullname" . }}
+  namespace: {{ .Values.namespace}}
+  labels:
+    {{- include "portal-frontend.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "portal-frontend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "portal-frontend.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          env:
+          - name: NODE_ENV
+            value: {{ .Values.envs.NODE_ENV | quote }}
+
+          - name: PROTOCOL
+            value: {{ .Values.envs.PROTOCOL | quote }}
+
+          - name: DEIP_CLIENT_URL
+            value: {{ .Values.envs.DEIP_CLIENT_URL | quote }}
+
+          - name: DEIP_SERVER_URL
+            value: {{ .Values.envs.DEIP_SERVER_URL | quote }}
+
+          - name: DEIP_WEB_SOCKET_URL
+            value: {{ .Values.envs.DEIP_SERVER_URL | quote }}
+
+          - name: DEIP_FULL_NODE_URL
+            value: {{ .Values.envs.DEIP_FULL_NODE_URL | quote }}
+
+          - name: DEIP_CHAIN_EXPLORER_URL
+            value: {{ .Values.envs.DEIP_CHAIN_EXPLORER_URL | quote }}
+
+          - name: DEIP_PAYMENT_SERVICE_URL
+            value: {{ .Values.envs.DEIP_PAYMENT_SERVICE_URL | quote }}
+
+          - name: TENANT
+            value: {{ .Values.envs.TENANT | quote }}
+
+          - name: SIG_SEED
+            value: {{ .Values.envs.SIG_SEED | quote }}
+
+          - name: CORE_ASSET
+            value: {{ .Values.envs.CORE_ASSET | squote }}
+
+          - name: FAUCET_ACCOUNT_USERNAME
+            value: {{ .Values.envs.FAUCET_ACCOUNT_USERNAME | quote }}
+
+          - name: ACCOUNT_DEFAULT_FUNDING_AMOUNT
+            value: {{ .Values.envs.ACCOUNT_DEFAULT_FUNDING_AMOUNT | quote }}
+
+          - name: APP_ID
+            value: {{ .Values.envs.APP_ID | quote }}
+
+          - name: VUE_APP_I18N_LOCALE
+            value: {{ .Values.envs.VUE_APP_I18N_LOCALE | quote }} 
+          - name: VUE_APP_I18N_FALLBACK_LOCALE
+            value: {{ .Values.envs.VUE_APP_I18N_FALLBACK_LOCALE | quote }} 
+          
+          - name: TENANT_HOT_WALLET_DAO_ID
+            value: {{ .Values.envs.TENANT_HOT_WALLET_DAO_ID | quote }} 
+
+          - name: WALLET_OAUTH_URL
+            value: {{ .Values.envs.WALLET_OAUTH_URL | quote }}
+
+          - name: WALLET_URL
+            value: {{ .Values.envs.WALLET_URL | quote }}
+
+

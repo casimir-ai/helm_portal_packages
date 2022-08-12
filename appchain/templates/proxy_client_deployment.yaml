@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: event-proxy-client-deployment
+  labels:
+    app: event-proxy-client
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.proxy_event_client.replicas }}
+  selector:
+    matchLabels:
+      app: event-proxy-client
+  template:
+    metadata:
+      labels:
+        app: event-proxy-client
+    spec:
+      containers:
+      - name: event-proxy-client
+        image: "{{ .Values.proxy_event_client.repository }}:{{ .Values.proxy_event_client.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["event-proxy-client"]
+        env: 
+          - name: KAFKA_BOOTSTRAP_SERVERS
+            value: "portal-kafka-headless.default.svc.cluster.local"
+      restartPolicy: Always

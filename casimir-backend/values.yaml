@@ -1,0 +1,71 @@
+namespace: portal
+
+replicaCount: 1
+
+image:
+  repository: 777345813910.dkr.ecr.eu-central-1.amazonaws.com/nowar-backend
+  pullPolicy: IfNotPresent
+  tag: "fbd2b9fab613041fe8598cecacace59c9708ce7d"
+
+
+
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+
+
+service:
+  type: NodePort
+
+
+ingress:
+  enabled: false
+
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+envs:
+  PORT: 9081
+  WS_PORT: 9083
+  CHAIN_ID: "b11fe4dac3a207875d41f4d8bdc4330693b1496e30c661da5abd692c55c44654"
+  TENANT: "6561845613164402145092105428472817005070"
+  TENANT_PORTAL: '{"privKey":"01b554e3916182f1959b9657f36ae0cf3df8b6c28233252eba4d63a73dd8b989","pubKey":"844e21998d6c55844db7cdda9da02cec1d7dbc4cbc3cc2364d511afdf94a2f4b"}'
+  DEIP_MONGO_STORAGE_CONNECTION_URL: mongodb://portal:M8ZV1GCd9Y31UsS@abb53b8e6728847879199b21ff4dd53a-1265818138.eu-central-1.elb.amazonaws.com:27017,aef2a91ce28c841e9810987f9bbddc9c-534704329.eu-central-1.elb.amazonaws.com:27017/portal_db?authSource=admin&replicaSet=portalSet
+  SIG_SEED: "quickbrownfoxjumpsoverthelazydog"
+  JWT_SECRET: "shhhhhhhhhhh!!!"
+  DEIP_PAYMENT_SERVICE_URL: https://dev-payments.deip.world
+  DEIP_PAYMENT_SERVICE_PUB_KEY: "DEIP6zbX`JKP7aSpHeUU7vdCkfR2Cgj6yGLJjn5jw9kPydk2dqnK3Eb"
+  PROTOCOL: 2
+  DEIP_FULL_NODE_URL: http://appchain-service-internal.portal.svc.cluster.local:9933
+  FAUCET_ACCOUNT: '{ "username": "7d6219843195cffa1cf3eeed3e597eb880c58471", "wif": "//Alice", "fundingAmount": "1000" }'
+  CORE_ASSET: '{ "id": 0, "symbol": "DEIP", "precision": 18 }'
+  CHAIN_BLOCK_INTERVAL_MILLIS: 6000
+  DEIP_SERVER_URL: https://backend.casimir.one
+  DEIP_CLIENT_URL: https://casimir.one
+  TENANT_FILE_STORAGE_TYPE: 1
+  TENANT_SFTP_HOST: dev-sftp.deip.world
+  TENANT_SFTP_USER: tenant-8e429520
+  TENANT_SFTP_PASSWORD: deipdev
+  KAFKA_BROKER_URLS: '["portal-kafka-headless.default.svc.cluster.local:9092"]'
+  NEED_CONFIRM_REGISTRATION: false
+  EMAIL_CONECTION: '{ "type": "oauth2", "user": "anekey.egor.test@gmail.com", "refreshToken": "1//041muSJmOBVzhCgYIARAAGAQSNwF-L9IrPsbHdsdb5R5iCWbvppxwSer5LRYBNQwIWwdBPDeo-pnm7h_OnxixqfTkzGzXZG-VAKI", "clientId": "772070946467-rdedvhgcl99ctn0a80pkfmdvmoctlc89.apps.googleusercontent.com", "clientSecret": "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", "accessUrl": "https://oauth2.googleapis.com/token", "service": "gmail" }'
+  TENANT_HOT_WALLET: '{"privKey":"38b6bf99e4b06e64cafeeedf1f418f8f03b472e14ece7f5e5cb4d9aa9e6caef7","daoId":"9bc402c9294660ca92af51d332fb4efc44b74967"}'
+  KAFKA_CLIENT_ID: "nowar-dev-client-id"
+  KAFKA_APP_GROUP_ID: "nowar-dev-app-group-id"
+  KAFKA_CHAIN_GROUP_ID: "nowar-dev-chain-group-id"
+  KAFKA_APP_TOPIC: "nowar-dev-app-topic"
+  KAFKA_CHAIN_TOPIC: "blockchain"
+
+

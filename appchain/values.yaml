@@ -1,0 +1,19 @@
+namespace: portal
+
+image:
+  replicas: 1
+  repository: mashkaro/appchain-deip
+  tag: v.2.4.7
+  pullPolicy: IfNotPresent
+
+
+proxy_event:
+  replicas: 1
+  repository: mashkaro/event-proxy
+  tag: v.2.4.7
+
+proxy_event_client:
+  replicas: 1
+  repository: mashkaro/event-proxy-client
+  tag: v.2.4.7
+  

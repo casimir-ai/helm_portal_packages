@@ -1,0 +1,45 @@
+mongodb:
+  global:
+  architecture: replicaset
+  useStatefulSet: true
+  auth:
+    enabled: true
+    rootUser: portal
+    rootPassword: "M8ZV1GCd9Y31UsS"
+    usernames: ["casimir"]
+    passwords: ["048BaPuZGsVQ054K"]
+    databases: ["portal_db"]
+    replicaSetKey: "portalSet"
+  replicaSetName: portalSet
+  replicaCount: 2
+  strategyType: RollingUpdate
+  podAntiAffinityPreset: hard
+  resources:
+    limits:
+      memory: 4Gi
+    requests: 
+      cpu: 1
+      memory: 2Gi
+ 
+  service:
+    nameOverride: "mongo-internal"
+    type: ClusterIP
+    port: 27017
+    portName: mongodb
+  externalAccess:
+    enabled: true
+    autoDiscovery:
+      enabled: true
+    service:
+      type: LoadBalancer
+      port: 27017
+  persistence:
+    enabled: true
+    storageClass: "gp2"
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+  serviceAccount:
+    create: true
+  rbac:
+    create: true

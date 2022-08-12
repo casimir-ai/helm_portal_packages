@@ -1,0 +1,10 @@
+apiVersion: v2
+name: portal-mongo
+description: A Helm chart for basic mongoDB Set UP
+type: application
+version: 1.0.0
+appVersion: "1.16.0"
+dependencies:
+  - name: mongodb
+    version: "11.1.8"
+    repository: https://charts.bitnami.com/bitnami

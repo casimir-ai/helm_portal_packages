@@ -1,0 +1,113 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-hosts
+  namespace: portal
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/load-balancer-attributes: idle_timeout.timeout_seconds=600
+    alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig":{ "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-central-1:777345813910:certificate/bebe8896-72bd-4520-9ac2-ad7d9dade4ef
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+spec:
+  rules:
+  - host: ws-appchain.casimir.one 
+    http:
+      paths:
+      - path: /*
+        pathType: Prefix
+        backend:
+          service:
+            name: ssl-redirect
+            port: 
+              name: use-annotation
+      - path: /*
+        pathType: Prefix
+        backend:
+          service:
+            name: "appchain-service"
+            port:
+              number: 9944
+
+  - host: appchain.casimir.one 
+    http:
+      paths:
+      - path: /*
+        pathType: Prefix
+        backend:
+          service:
+            name: ssl-redirect
+            port: 
+              name: use-annotation            
+
+      - path: /*
+        pathType: Prefix
+        backend:
+          service:
+            name: "appchain-service"
+            port:
+              number: 9933
+
+  - host: backend.casimir.one
+    http:
+      paths:
+      - path: /*
+        pathType: Prefix
+        backend:
+          service:
+            name: ssl-redirect
+            port: 
+              name: use-annotation
+      - path: /*
+        pathType: Prefix
+        backend:
+          service:
+            name: "backend-casimir-backend"
+            port:
+              number: 9081
+
+  - host: socket.casimir.one
+    http:
+      paths:
+      - path: /*
+        pathType: Prefix
+        backend:
+          service:
+            name: ssl-redirect
+            port: 
+              name: use-annotation
+      - path: /*
+        pathType: Prefix
+        backend:
+          service:
+            name: "backend-casimir-backend"
+            port:
+              number: 9083
+
+  - host: casimir.one
+    http:
+      paths:
+      - path: /*
+        pathType: Prefix
+        backend:
+          service:
+            name: ssl-redirect
+            port: 
+              name: use-annotation
+      - path: /*
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-portal-frontend
+            port:
+              number: 80
+
+
+      
+
+      
+
+
+
+

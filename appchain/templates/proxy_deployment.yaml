@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: event-proxy-deployment
+  labels:
+    app: event-proxy
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.proxy_event.replicas }}
+  selector:
+    matchLabels:
+      app: event-proxy
+  template:
+    metadata:
+      labels:
+        app: event-proxy
+    spec:
+      initContainers:
+        - name: install
+          image: busybox:1.28
+          command: ["/bin/sh", "-c"]
+          args:
+            - touch /app/event-proxy.toml; 
+              echo [blockchain] >> /app/event-proxy.toml; 
+              echo rpc = \"ws://appchain-service-internal.portal.svc.cluster.local:9944/\" >> /app/event-proxy.toml; 
+              echo [message_broker] >> /app/event-proxy.toml; 
+              echo kafka_bootstrap_servers = \"portal-kafka-headless.default.svc.cluster.local:9092\" >> /app/event-proxy.toml;
+              echo [offchain] >> /app/event-proxy.toml; 
+          volumeMounts:
+            - name: workdir
+              mountPath: "/app"
+      containers:
+      - name: event-proxy
+        image: "{{ .Values.proxy_event.repository }}:{{ .Values.proxy_event.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["/bin/sh", "-c"]
+        args:
+          - event-proxy --config=/app/event-proxy.toml
+        volumeMounts:
+          - name: workdir
+            mountPath: "/app"
+        env:
+          - name: RUST_LOG
+            value: "error,librdkafka=error,rdkafka::client=error"
+      volumes:
+        - name: workdir
+          emptyDir: {}
+      restartPolicy: Always
+        

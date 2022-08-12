@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: {{ include "casimir-backend.fullname" . }}
+  namespace: {{ .Values.namespace}}
+  labels:
+    {{- include "casimir-backend.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "casimir-backend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "casimir-backend.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.envs.PORT }}
+            - containerPort: {{ .Values.envs.WS_PORT }}
+          env:
+            - name: PORT
+              value: {{ .Values.envs.PORT | quote }}
+            - name: WS_PORT
+              value: {{ .Values.envs.WS_PORT | quote }}
+            - name: CHAIN_ID
+              value: {{ .Values.envs.CHAIN_ID | quote }}
+            - name: TENANT
+              value: {{ .Values.envs.TENANT | quote }}
+            - name: TENANT_PORTAL
+              value: {{ .Values.envs.TENANT_PORTAL | squote }}
+            - name: DEIP_MONGO_STORAGE_CONNECTION_URL
+              value: {{ .Values.envs.DEIP_MONGO_STORAGE_CONNECTION_URL | quote  }}
+            - name: SIG_SEED
+              value: {{ .Values.envs.SIG_SEED | quote }}
+            - name: JWT_SECRET
+              value: {{ .Values.envs.JWT_SECRET }}
+            - name: DEIP_PAYMENT_SERVICE_URL
+              value: {{ .Values.envs.DEIP_PAYMENT_SERVICE_URL | quote  }}
+            - name: DEIP_PAYMENT_SERVICE_PUB_KEY
+              value: {{ .Values.envs.DEIP_PAYMENT_SERVICE_PUB_KEY }}
+            - name: PROTOCOL
+              value: {{ .Values.envs.PROTOCOL | quote }}
+            - name: DEIP_FULL_NODE_URL
+              value: {{ .Values.envs.DEIP_FULL_NODE_URL | quote }}
+            - name: FAUCET_ACCOUNT
+              value: {{ .Values.envs.FAUCET_ACCOUNT | squote }}
+            - name: CORE_ASSET
+              value: {{ .Values.envs.CORE_ASSET | squote }}
+            - name: CHAIN_BLOCK_INTERVAL_MILLIS
+              value: {{ .Values.envs.CHAIN_BLOCK_INTERVAL_MILLIS | quote }}
+            - name: DEIP_SERVER_URL
+              value: {{ .Values.envs.DEIP_SERVER_URL | quote }}
+            - name: DEIP_CLIENT_URL
+              value: {{ .Values.envs.DEIP_CLIENT_URL | quote }}
+
+            - name: TENANT_FILE_STORAGE_TYPE
+              value: {{ .Values.envs.TENANT_FILE_STORAGE_TYPE | quote }}
+            - name: TENANT_SFTP_HOST
+              value: {{ .Values.envs.TENANT_SFTP_HOST | quote }}
+            - name: TENANT_SFTP_USER
+              value: {{ .Values.envs.TENANT_SFTP_USER | quote }}
+            - name: TENANT_SFTP_PASSWORD
+              value: {{ .Values.envs.TENANT_SFTP_PASSWORD | quote}}
+
+            - name: KAFKA_BROKER_URLS
+              value: {{ .Values.envs.KAFKA_BROKER_URLS | squote}}
+            - name: NEED_CONFIRM_REGISTRATION
+              value: {{ .Values.envs.NEED_CONFIRM_REGISTRATION | quote }}
+            - name: EMAIL_CONECTION
+              value: {{ .Values.envs.EMAIL_CONECTION | squote }}
+            - name: TENANT_HOT_WALLET
+              value: {{ .Values.envs.TENANT_HOT_WALLET | squote }}
+
+            - name: KAFKA_CLIENT_ID
+              value: {{ .Values.envs.KAFKA_CLIENT_ID | quote}}
+            - name: KAFKA_APP_GROUP_ID
+              value: {{ .Values.envs.KAFKA_APP_GROUP_ID | quote}}
+            - name: KAFKA_CHAIN_GROUP_ID
+              value: {{ .Values.envs.KAFKA_CHAIN_GROUP_ID | quote}}
+            - name: KAFKA_APP_TOPIC
+              value: {{ .Values.envs.KAFKA_APP_TOPIC | quote}}
+            - name: KAFKA_CHAIN_TOPIC
+              value: {{ .Values.envs.KAFKA_CHAIN_TOPIC | quote}}
+
+
+      

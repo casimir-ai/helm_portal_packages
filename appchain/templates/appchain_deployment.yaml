@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appchain-deployment
+  labels:
+    app: appchain
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.image.replicas }}
+  selector:
+    matchLabels:
+      app: appchain
+  template:
+    metadata:
+      labels:
+        app: appchain
+    spec:
+      volumes:
+        - name: appchain-dir
+          emptyDir: {}
+      containers:
+      - name: appchain
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        volumeMounts:
+          - name: appchain-dir
+            mountPath: "/var/lib/deipd"
+        command: ["appchain-deip", "--dev", "--ws-external", "--rpc-external", "--rpc-methods=Unsafe", "--rpc-cors=all", "--base-path=/var/lib/deipd", "-lpallet_deip=debug", "-lpallet_deip_proposal=debug", "-lpallet_deip_dao=debug", "-lpallet_deip_assets=debug"]
+        ports:
+        - containerPort: 9944
+        - containerPort: 9933
+      restartPolicy: Always

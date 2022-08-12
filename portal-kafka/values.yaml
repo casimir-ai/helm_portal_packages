@@ -1,0 +1,36 @@
+zookeeper:
+  replicaCount: 1
+  auth:
+    enabled: false
+  allowAnonymousLogin: true
+
+kafka:
+  replicaCount: 2
+  zookeeper:
+    enabled: false
+  externalZookeeper:
+    servers: portal-kafka-zookeeper.default.svc.cluster.local
+  autoCreateTopicsEnable: true
+  externalAccess:
+    enabled: true
+    service: 
+      type: LoadBalancer
+      ports:
+        external: 9094
+    autoDiscovery:
+      enabled: true
+  serviceAccount:
+    create: true
+  rbac:
+    create: true
+
+kafka-ui:
+  replicaCount: 1
+  service:
+    type: LoadBalancer
+    port: 80
+  envs: 
+    config: {
+      KAFKA_CLUSTERS_0_NAME: local,
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: portal-kafka-headless.default.svc.cluster.local:9092
+    }
